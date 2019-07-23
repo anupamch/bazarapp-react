@@ -1,6 +1,5 @@
 import React,{Component} from 'react';
-import ProductService from '../../services/productService'
-
+import CategoryService from '../../services/categoryService'
 import { Container, Row, Col, Card, CardHeader, CardBody } from "shards-react";
 import PageTitle from "../common/PageTitle";
 import config from '../../config'
@@ -8,20 +7,20 @@ import AlertMessage from '../util/alert-message'
 
 import DataTable from 'react-data-table-component';
 
-export default class Product extends Component{
+export default class Category extends Component{
     constructor(props){
         super(props);
-        this.state={plist:[],products:[]}
-        console.log(ProductService)
+        this.state={plist:[],category:[]}
+        
     }
     componentWillMount(){
-      this.getAllProduct()
+      this.getAllCategory()
     }
-    getAllProduct=()=>{
-          ProductService.getProducts().then(res=>{
+    getAllCategory=()=>{
+          CategoryService.getProductCategory().then(res=>{
             console.log(res.data)
-            this.setState({plist:res.data.products})
-            this.setState({products:res.data.products})
+            this.setState({plist:res.data.categories})
+            this.setState({category:res.data.categories})
         })
         .catch(error=>{
             
@@ -30,13 +29,13 @@ export default class Product extends Component{
     searchProduct=(e)=>{
         let tval=e.target.value;
         if(tval==""){
-          this.setState({plist:this.state.products})
+          this.setState({plist:this.state.category})
           return
         }
         let plist=[]
-        for(let val of this.state.products){
+        for(let val of this.state.category){
               
-              if((val['sku']).toUpperCase().indexOf(tval.toUpperCase())==0 || val['name'].toUpperCase().indexOf(tval.toUpperCase())==0){
+              if(val['name'].toUpperCase().indexOf(tval.toUpperCase())==0){
                   plist.push(val)
               }
           
@@ -45,26 +44,26 @@ export default class Product extends Component{
         this.setState({plist:plist})
         
     } 
-    deleteProduct=(_id)=>{
+    deleteCategory=(_id)=>{
      
-      ProductService.deleteProduct(_id).then(res=>{
+      CategoryService.deleteCategory(_id).then(res=>{
        
         if(res.status==200){
          // this.props.history.location.state.msg="Product Deleted successfully";
-          this.getAllProduct()
+          this.getAllCategory()
         } 
       })
     }
 
-    addProduct=()=>{
+    addCategory=()=>{
      
-      this.props.history.push('/product-add')
+      this.props.history.push('/category-add')
     }
     render(){
       const columns = [
                          {
-                          name: 'SKU',
-                          selector: 'sku',
+                          name: '#ID',
+                          selector: '_id',
                           sortable: true,
                          },
                          {
@@ -72,28 +71,15 @@ export default class Product extends Component{
                           selector: 'name',
                           sortable: true,
                          },
-                         {
-                          name: 'Price',
-                          selector: 'price',
-                          sortable: true,
-                         },
-                         {
-                           name:'Image',
-                           cell:row=><img src={config.API_URL+"/uploads/pimages/"+row.image} width="55"/>
-                         },
-                         {
-                          name:'Unit',
-                          selector: 'unit',
-                          sortable: true,
-                        },
+                         
                          {
                           name:'Action',
-                          cell:row=><a href={`/product-edit/${row._id}`} className='btn btn-info'>Edit</a>
+                          cell:row=><a href={`/category-edit/${row._id}`} className='btn btn-info'>Edit</a>
                               
                         },
                         {
                           name:'',
-                          cell:row=> <button  className='btn btn-danger' onClick={()=>this.deleteProduct(row._id)}>Delete</button>
+                          cell:row=> <button  className='btn btn-danger' onClick={()=>this.deleteCategory(row._id)}>Delete</button>
                         }
                         
                         
@@ -104,7 +90,7 @@ export default class Product extends Component{
         {/* Page Header */}
         <AlertMessage prop={this.props}></AlertMessage>
         <Row noGutters className="page-header py-4">
-          <PageTitle sm="4" title="Product List" subtitle="Products" className="text-sm-left" />
+          <PageTitle sm="4" title="Category List" subtitle="Categories" className="text-sm-left" />
         </Row>
     
         {/* Default Light Table */}
@@ -113,7 +99,7 @@ export default class Product extends Component{
             <Card small className="mb-4">
               <CardHeader className="border-bottom">
                
-                <button className="btn btn-info float-left"  onClick={this.addProduct}>Add product</button>
+                <button className="btn btn-info float-left"  onClick={this.addCategory}>Add Category</button>
               </CardHeader>
               <CardBody className="p-0 pb-3">
                 <div className="col-md-4 float-right mt-10" style={{marginTop:20}}><input type="search" placeholder="Search" className="form-control" onKeyUp={this.searchProduct}/></div>

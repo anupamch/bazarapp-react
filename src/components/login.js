@@ -41,7 +41,7 @@ class Login extends Component {
                    history.push('/dashboard');         
               }
               else{
-                 this.setState({errors:{auth_error:"Invalid User Id Password"}})
+                 this.setState({errors:{auth_error:"Invalid User Id or Password"}})
                  console.log(this.state.errors)
               }
             

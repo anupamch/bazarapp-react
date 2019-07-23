@@ -8,7 +8,11 @@ import auth from './middleware/auth'
 import normal from './middleware/normal'
 import Product from './components/product/product'
 import ProductAdd from './components/product/productAdd'
+import ProductEdit from './components/product/productEdit'
 import User from './components/user'
+import Category from './components/category/category'
+import CategoryAdd from './components/category/categoryAdd'
+import CategoryEdit from './components/category/categoryEdit'
 //import {unregister} from './Interceptor'
 
 export default [
@@ -34,6 +38,13 @@ export default [
     middleware:auth
   },
   {
+    path:'/product-edit/:id',
+    exact:false,
+    layout:Layout,
+    component:ProductEdit,
+    middleware:auth
+  },
+  {
     path:'/product-add',
     exact:false,
     layout:Layout,
@@ -54,7 +65,29 @@ export default [
        layout:Layout,
        component:Dashboard,
        middleware:auth
-   }
+   },
+   {
+    path:'/category',
+    exact:false,
+    layout:Layout,
+    component:Category,
+    middleware:auth
+  },
+  {
+   path:'/category-add',
+   exact:false,
+   layout:Layout,
+   component:CategoryAdd,
+   middleware:auth
+ },
+ {
+  path:'/category-edit',
+  exact:false,
+  layout:Layout,
+  component:CategoryEdit,
+  middleware:auth
+}
+ 
 
 ];
 

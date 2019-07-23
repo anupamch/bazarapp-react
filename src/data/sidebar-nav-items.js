@@ -19,6 +19,12 @@ export default function() {
       htmlAfter: ""
     },
     {
+      title: "Category",
+      to: "/category",
+      htmlBefore: '<i class="fas fa-tachometer-alt"></i>',
+      htmlAfter: ""
+    },
+    {
       title: "Logout",
       to: "/dashboard",
       htmlBefore: '<i class="fas fa-sign-out-alt"></i>',

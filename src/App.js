@@ -10,24 +10,30 @@ import "./shards-dashboard/styles/shards-dashboards.1.1.0.min.css";
 
 class App extends Component {
   
+  constructor(pros){
+     super(pros)
+      this.state={showOverlay:false}
+  }
   componentWillMount(){
     const self = this
-    axios.interceptors.request.use(function (config) {
+    axios.interceptors.request.use( (config)=> {
       // spinning start to show
       config.headers.authorization = localStorage.getItem("oauthToken");
+      this.setState({showOverlay:true})
       return config
      }, function (error) {
+      this.setState({showOverlay:false})
        return Promise.reject(error);
      });
  
-     axios.interceptors.response.use(function (response) {
+     axios.interceptors.response.use( (response)=> {
       // spinning hide
       console.log('Incomming...')
- 
+      this.setState({showOverlay:false})  
       return response;
-    }, function (error) {
-      
-      if(error.response.status==403){
+    },  (error) =>{
+       this.setState({showOverlay:false})
+      if(typeof error.response!= 'undefined' && error.response.status==403){
         if(error.response.data.code==403){
        
            window.location='/login';  
@@ -39,7 +45,8 @@ class App extends Component {
   render() {
       //console.log('App-sdfsdf')
       return (
-        
+        <div className="wrapper">
+          <div className="overlay row align-items-center" style={{display:  this.state.showOverlay ? 'flex' : 'none' }}><i className="fas fa-cog fa-spin"></i></div>
         <BrowserRouter>
                                             
         {routes.map((route, index) => {
@@ -61,7 +68,7 @@ class App extends Component {
         
           </BrowserRouter>
          
-        
+        </div>
       );
   }
 }
