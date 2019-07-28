@@ -8,6 +8,12 @@ constructor(){}
        
     }
 
+    static getProductCategoryById(id)
+    {
+       return axios.get(config.API_URL+'/get-product-category-by-id/'+id)
+       
+    }
+
     static deleteCategory(id){
         return axios.get(config.API_URL+'/delete-category/'+id)
     }
@@ -27,6 +33,16 @@ constructor(){}
         return axios({
             method: 'post',
             url: config.API_URL+'/create-category',
+            data: form,
+            config: { headers: {'Content-Type': 'multipart/form-data' }}
+            })
+    }
+
+    static editCategory(form){
+        
+        return axios({
+            method: 'post',
+            url: config.API_URL+'/edit-category',
             data: form,
             config: { headers: {'Content-Type': 'multipart/form-data' }}
             })

@@ -11,7 +11,7 @@ export default class ProductAdd extends Component{
         this.state={
            fields:{},
            errors:{},
-           catagories:[],
+           categories:[],
            images: []
         }
         this.validator=new SimpleReactValidator();
@@ -21,7 +21,7 @@ export default class ProductAdd extends Component{
         CategoryService.getProductCategory().then(res=>{
                  //console.log(res.data.categories)
                   if(res.data.status==200)
-                    this.setState({catagories:res.data.categories})
+                    this.setState({categories:res.data.categories})
                   else
                     console.log("Something is wrong")  
               })
@@ -147,11 +147,12 @@ export default class ProductAdd extends Component{
                
               <FormGroup>
               <label>Category</label>
-              <select className="form-control"  name="category" id="category" onChange={this.handleChange}>
+              <select className="form-control"  name="category" id="category_id" onChange={this.handleChange}>
                   <option>--Select Category--</option>
 
-                  {this.state.catagories.map((category,index)=>{
-                      return <option key={index} value={category._id}>{category.name}</option>
+                  {this.state.categories.map((category,index)=>{
+                     
+                      return <option key={index} value={category.id}>{category.name}</option>
                   })}
               </select>
               {this.validator.message('Category',this.state.fields.category,"required")}

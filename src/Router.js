@@ -81,7 +81,7 @@ export default [
    middleware:auth
  },
  {
-  path:'/category-edit',
+  path:'/category-edit/:id',
   exact:false,
   layout:Layout,
   component:CategoryEdit,

@@ -88,12 +88,12 @@ export default class Product extends Component{
                         },
                          {
                           name:'Action',
-                          cell:row=><a href={`/product-edit/${row._id}`} className='btn btn-info'>Edit</a>
+                          cell:row=><a href={`/product-edit/${row.id}`} className='btn btn-info'>Edit</a>
                               
                         },
                         {
                           name:'',
-                          cell:row=> <button  className='btn btn-danger' onClick={()=>this.deleteProduct(row._id)}>Delete</button>
+                          cell:row=> <button  className='btn btn-danger' onClick={()=>this.deleteProduct(row.id)}>Delete</button>
                         }
                         
                         

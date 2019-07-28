@@ -63,7 +63,7 @@ export default class Category extends Component{
       const columns = [
                          {
                           name: '#ID',
-                          selector: '_id',
+                          selector: 'id',
                           sortable: true,
                          },
                          {
@@ -74,12 +74,12 @@ export default class Category extends Component{
                          
                          {
                           name:'Action',
-                          cell:row=><a href={`/category-edit/${row._id}`} className='btn btn-info'>Edit</a>
+                          cell:row=><a href={`/category-edit/${row.id}`} className='btn btn-info'>Edit</a>
                               
                         },
                         {
                           name:'',
-                          cell:row=> <button  className='btn btn-danger' onClick={()=>this.deleteCategory(row._id)}>Delete</button>
+                          cell:row=> <button  className='btn btn-danger' onClick={()=>this.deleteCategory(row.id)}>Delete</button>
                         }
                         
                         

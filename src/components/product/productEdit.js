@@ -28,7 +28,7 @@ export default class ProductAdd extends Component{
         ProductService.singleProduct(id).then(res=>{
                  //console.log(res.data.product)
                   if(res.data.status==200)
-                    this.setState({fields:res.data.product[0]})
+                    this.setState({fields:res.data.product})
                   else
                     console.log("Something is wrong")  
                   
@@ -57,7 +57,7 @@ export default class ProductAdd extends Component{
             }
             else
               this.setState({error:{imageError:""}}) */
-            let response = await ProductService.countSku(this.state.fields.sku,this.state.fields._id);  
+            let response = await ProductService.countSku(this.state.fields.sku,this.state.fields.id);  
             
             if(response.data.count>0){
                 this.setState({errors:{skuError:"SKU already exist"}})
@@ -159,14 +159,14 @@ export default class ProductAdd extends Component{
                
               <FormGroup>
               <label>Category</label>
-              <select value={this.state.fields.category} className="form-control"  name="category" id="category" onChange={this.handleChange}>
+              <select value={this.state.fields.category_id} className="form-control"  name="category_id" id="category_id" onChange={this.handleChange}>
                   <option>--Select Category--</option>
 
                   {this.state.catagories.map((category,index)=>{
-                      return <option key={index} value={category._id}>{category.name}</option>
+                      return <option key={index} value={category.id}>{category.name}</option>
                   })}
               </select>
-              {this.validator.message('Category',this.state.fields.category,"required")}
+              {this.validator.message('Category',this.state.fields.category_id,"required")}
               </FormGroup>
               <div className="col-md-12">&nbsp;</div>
               <div className="col-md-12 nopadding">
