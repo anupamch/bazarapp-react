@@ -1,6 +1,6 @@
 import React,{Component} from 'react';
 import ProductService from '../../services/productService'
-
+import { Link } from 'react-router-dom';
 import { Container, Row, Col, Card, CardHeader, CardBody } from "shards-react";
 import PageTitle from "../common/PageTitle";
 import config from '../../config'
@@ -58,7 +58,7 @@ export default class Product extends Component{
 
     addProduct=()=>{
      
-      this.props.history.push('/product-add')
+      this.props.history.push('/product/add')
     }
     render(){
       const columns = [
@@ -88,7 +88,7 @@ export default class Product extends Component{
                         },
                          {
                           name:'Action',
-                          cell:row=><a href={`/product-edit/${row.id}`} className='btn btn-info'>Edit</a>
+                          cell:row=><Link  to={`/product/edit/${row.id}`} className='btn btn-info'>Edit</Link>
                               
                         },
                         {

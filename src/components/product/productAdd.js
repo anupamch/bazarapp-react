@@ -12,7 +12,8 @@ export default class ProductAdd extends Component{
            fields:{},
            errors:{},
            categories:[],
-           images: []
+           images: [],
+           is_service:0
         }
         this.validator=new SimpleReactValidator();
      }
@@ -33,6 +34,7 @@ export default class ProductAdd extends Component{
      handleChange = (event)=>{
         let id=event.target.id
         let fields=this.state.fields;
+        //console.log(event.target.value)
         fields[event.target.id]=event.target.value;
         this.setState({
          fields
@@ -42,13 +44,30 @@ export default class ProductAdd extends Component{
 
      handleSubmit=async (event)=>{
         event.preventDefault();
+       // console.log(this.state.fields)
         if(this.validator.allValid()){
             if(this.state.images.length==0){
                this.setState({errors:{imageError:"Product Image required"}})
                return;
             }
-            else
-              this.setState({error:{imageError:""}})
+            else if(this.state.fields.is_service){
+                
+                if(typeof this.state.fields.service_name=='undefined' || this.state.fields.service_name==""){
+                        
+                    this.setState({errors:{serviceNameError:"Please enter service name"}})
+                    return;
+                }
+                if(this.state.fields.service_cost==undefined || this.state.fields.service_cost==""){
+                    
+                    this.setState({errors:{serviceCostError:"Please enter service cost"}})
+                    return
+                }
+                
+                
+            }
+            
+            this.setState({error:{}})
+              
             let response = await ProductService.countSku(this.state.fields.sku);  
            //console.log(response)
             if(response.data.count>0){
@@ -81,7 +100,17 @@ export default class ProductAdd extends Component{
 
          this.setState({ images:images })
     }
-
+    toggleCheckbox(event) {
+        
+        let newValue = (this.state.fields.is_service === "on" || this.state.fields.is_service === true) ? false : true;
+        let fields=this.state.fields;
+        fields[event.target.id]=newValue
+        this.setState({
+            fields: fields
+        });
+        
+      }
+    
     render(){
         return(<Container fluid className="main-content-container px-4">
          
@@ -138,16 +167,36 @@ export default class ProductAdd extends Component{
               <input type="text" className="form-control"  name="minimum_order" id="minimum_order" onChange={this.handleChange}/>
               {this.validator.message('Minimum order',this.state.fields.minimum_order,"required|numeric")}
               </FormGroup>
+              <FormGroup>
+              <label htmlFor="is_service"  className="col-md-12 nopadding">
+                  <div className="col-md-12  nopadding">
+                   <div className="col-md-1 nopadding text-left float-left"></div> 
+                   <div className="col-md-7  nopadding text-left float-left" >  
+                  <input type="checkbox" style={{width:'auto'}}  className="form-control float-left"  name="is_service" id="is_service" onClick={this.toggleCheckbox.bind(this)}/>
+                  &nbsp;&nbsp;&nbsp;  Is there Extra Service?
+                        </div>
+                  </div>
+              </label>
               
+              
+              </FormGroup>
+              <div className={this.state.fields.is_service?'':'hidden'}>
+              <FormGroup>
+              <label>Service Name</label>
+              <input type="text" className="form-control"  name="service_name" id="service_name" onChange={this.handleChange}/>
+              
+              <span style={{color:'red'}}>{this.state.errors.serviceNameError}</span>
+              </FormGroup>
               <FormGroup>
               <label>Service Cost</label>
-              <input type="text" className="form-control"  name="service_cost" id="service_cost" onChange={this.handleChange}/>
-              {this.validator.message('Service Cost',this.state.fields.service_cost,"numeric")}
+              <input type="text" className="form-control"  name="service_cost" id="service_cost" onChange={this.handleChange} />
+              {this.validator.message('service_cost',this.state.fields.service_cost,"numeric")}
+              <span style={{color:'red'}}>{this.state.errors.serviceCostError}</span>
               </FormGroup>
-               
+              </div>
               <FormGroup>
               <label>Category</label>
-              <select className="form-control"  name="category" id="category_id" onChange={this.handleChange}>
+              <select className="form-control"  name="category_id" id="category_id" onChange={this.handleChange}>
                   <option>--Select Category--</option>
 
                   {this.state.categories.map((category,index)=>{
@@ -155,7 +204,7 @@ export default class ProductAdd extends Component{
                       return <option key={index} value={category.id}>{category.name}</option>
                   })}
               </select>
-              {this.validator.message('Category',this.state.fields.category,"required")}
+              {this.validator.message('category_id',this.state.fields.category_id,"required")}
               </FormGroup>
               <div className="col-md-12">&nbsp;</div>
               <div className="col-md-12 nopadding">

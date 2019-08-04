@@ -6,9 +6,8 @@ import Layout from './main_layouts/layout'
 import DefaultLayout from './main_layouts/defaultLayout'
 import auth from './middleware/auth'
 import normal from './middleware/normal'
-import Product from './components/product/product'
-import ProductAdd from './components/product/productAdd'
-import ProductEdit from './components/product/productEdit'
+import ProductRouter from './components/product/productRouter'
+
 import User from './components/user'
 import Category from './components/category/category'
 import CategoryAdd from './components/category/categoryAdd'
@@ -34,23 +33,10 @@ export default [
     path:'/product',
     exact:false,
     layout:Layout,
-    component:Product,
+    component:ProductRouter,
     middleware:auth
   },
-  {
-    path:'/product-edit/:id',
-    exact:false,
-    layout:Layout,
-    component:ProductEdit,
-    middleware:auth
-  },
-  {
-    path:'/product-add',
-    exact:false,
-    layout:Layout,
-    component:ProductAdd,
-    middleware:auth
-  },
+
   
   {
     path:'/user',
