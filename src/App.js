@@ -35,19 +35,20 @@ class App extends Component {
        this.setState({showOverlay:false})
       if(typeof error.response!= 'undefined' && error.response.status==403){
         if(error.response.data.code==403){
-       
+           
            window.location='/login';  
         }
    }
       return Promise.reject(error);
     });
   }
+  
   render() {
       //console.log('App-sdfsdf')
       return (
         <div className="wrapper">
           <div className="overlay row align-items-center" style={{display:  this.state.showOverlay ? 'flex' : 'none' }}><i className="fas fa-cog fa-spin"></i></div>
-        <BrowserRouter>
+        <BrowserRouter basename='/nbazzar/'>
                                             
         {routes.map((route, index) => {
         return (

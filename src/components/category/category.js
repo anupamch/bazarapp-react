@@ -1,6 +1,7 @@
 import React,{Component} from 'react';
 import CategoryService from '../../services/categoryService'
 import { Container, Row, Col, Card, CardHeader, CardBody } from "shards-react";
+import { Link } from 'react-router-dom';
 import PageTitle from "../common/PageTitle";
 import config from '../../config'
 import AlertMessage from '../util/alert-message'
@@ -18,8 +19,7 @@ export default class Category extends Component{
     }
     getAllCategory=()=>{
           CategoryService.getProductCategory().then(res=>{
-            console.log(res.data)
-            this.setState({plist:res.data.categories})
+           this.setState({plist:res.data.categories})
             this.setState({category:res.data.categories})
         })
         .catch(error=>{
@@ -45,14 +45,15 @@ export default class Category extends Component{
         
     } 
     deleteCategory=(_id)=>{
-     
-      CategoryService.deleteCategory(_id).then(res=>{
-       
-        if(res.status==200){
-         // this.props.history.location.state.msg="Product Deleted successfully";
-          this.getAllCategory()
-        } 
-      })
+      if (window.confirm('Are you sure you wish to delete this category?')){
+          CategoryService.deleteCategory(_id).then(res=>{
+          
+            if(res.status==200){
+            // this.props.history.location.state.msg="Product Deleted successfully";
+              this.getAllCategory()
+            } 
+          })
+      }
     }
 
     addCategory=()=>{
@@ -74,7 +75,7 @@ export default class Category extends Component{
                          
                          {
                           name:'Action',
-                          cell:row=><a href={`/category-edit/${row.id}`} className='btn btn-info'>Edit</a>
+                          cell:row=><Link to={`/category-edit/${row.id}`} className='btn btn-info'>Edit</Link>
                               
                         },
                         {

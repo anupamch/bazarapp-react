@@ -4,6 +4,7 @@ import SimpleReactValidator from 'simple-react-validator';
 import axios from 'axios';
 import {withRouter} from 'react-router-dom'
 import {FormGroup} from "shards-react";
+import config from '../config'
 
 class Login extends Component {
   constructor(props){
@@ -30,7 +31,7 @@ class Login extends Component {
     try{
       
       if (this.validator.allValid()) {     
-       axios.post('http://localhost:8080/authenticate',this.state.fields)
+       axios.post(config.API_URL+'/authenticate',this.state.fields)
             .then(res=>{
               let data=res.data
               if(data.auth==1){
@@ -101,4 +102,4 @@ class Login extends Component {
   }
 }
 
-export default withRouter(Login)
+export default Login

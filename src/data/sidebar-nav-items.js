@@ -25,8 +25,14 @@ export default function() {
       htmlAfter: ""
     },
     {
+      title: "Settings",
+      to: "/settings",
+      htmlBefore: '<i class="fas fa-cog"></i>',
+      htmlAfter: ""
+    },
+    {
       title: "Logout",
-      to: "/dashboard",
+      to: "/logout",
       htmlBefore: '<i class="fas fa-sign-out-alt"></i>',
       htmlAfter: ""
     },

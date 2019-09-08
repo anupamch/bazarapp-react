@@ -36,7 +36,9 @@ export default class Product extends Component{
         let plist=[]
         for(let val of this.state.products){
               
-              if((val['sku']).toUpperCase().indexOf(tval.toUpperCase())==0 || val['name'].toUpperCase().indexOf(tval.toUpperCase())==0){
+              if((val['sku']).toUpperCase().indexOf(tval.toUpperCase())==0 || 
+                  val['name'].toUpperCase().indexOf(tval.toUpperCase())==0 ||
+                  val.ProductCategory.name.toUpperCase().indexOf(tval.toUpperCase())==0){
                   plist.push(val)
               }
           
@@ -46,14 +48,15 @@ export default class Product extends Component{
         
     } 
     deleteProduct=(_id)=>{
-     
-      ProductService.deleteProduct(_id).then(res=>{
-       
-        if(res.status==200){
-         // this.props.history.location.state.msg="Product Deleted successfully";
-          this.getAllProduct()
-        } 
-      })
+      if (window.confirm('Are you sure you wish to delete this product?')){
+            ProductService.deleteProduct(_id).then(res=>{
+            
+              if(res.status==200){
+              
+                this.getAllProduct()
+              } 
+            })
+      }
     }
 
     addProduct=()=>{
@@ -63,7 +66,7 @@ export default class Product extends Component{
     render(){
       const columns = [
                          {
-                          name: 'SKU',
+                          name: '#SKU',
                           selector: 'sku',
                           sortable: true,
                          },
@@ -73,27 +76,33 @@ export default class Product extends Component{
                           sortable: true,
                          },
                          {
-                          name: 'Price',
-                          selector: 'price',
+                          name: 'Price(Rs.)',
+                          cell:row=>(parseFloat(row.price)).toFixed(2),
                           sortable: true,
                          },
-                         {
+                         /*{
                            name:'Image',
                            cell:row=><img src={config.API_URL+"/uploads/pimages/"+row.image} width="55"/>
-                         },
+                         },*/
                          {
                           name:'Unit',
                           selector: 'unit',
                           sortable: true,
                         },
-                         {
-                          name:'Action',
-                          cell:row=><Link  to={`/product/edit/${row.id}`} className='btn btn-info'>Edit</Link>
-                              
+                        {
+                          name:'Category',
+                          cell:row=> row.ProductCategory.name,
+                          sortable: true,
                         },
                         {
-                          name:'',
-                          cell:row=> <button  className='btn btn-danger' onClick={()=>this.deleteProduct(row.id)}>Delete</button>
+                          name:'Minimum Order',
+                          cell:row=> row.minimum_order+" "+row.unit,
+                          sortable: true,
+                        },
+                         {
+                          name:'Action',
+                          cell:row=><div><Link  to={`/product/edit/${row.id}`} className='btn btn-info'>Edit</Link> <button  className='btn btn-danger' onClick={()=>this.deleteProduct(row.id)}>Delete</button></div>
+                              
                         }
                         
                         

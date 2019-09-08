@@ -36,8 +36,11 @@ export default class CategoryAdd extends Component{
             let response = await CategoryService.countCategory(this.state.fields.name);  
            //console.log(response)
             if(response.data.count>0){
-                this.setState({errors:{skuError:"Category '"+this.state.fields.name+"' already exist"}})
+                this.setState({errors:{nameError:"Category '"+this.state.fields.name+"' already exist"}})
                 return;
+            }
+            else{
+                this.setState({errors:{}})
             }
             CategoryService.createCategory(this.state.fields).then(res=>{
                 if(res.status==200){
@@ -72,7 +75,7 @@ export default class CategoryAdd extends Component{
               <label>Category Name</label>
               <input type="text" palceholder="Category name" name="name" id="name" onChange={this.handleChange} className="form-control"/>
               {this.validator.message('name',this.state.fields.name,"required")}
-              
+              <span style={{color:'red'}}>{this.state.errors.nameError}</span>
               </FormGroup>
             
             

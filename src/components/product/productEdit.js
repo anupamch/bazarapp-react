@@ -145,7 +145,7 @@ export default class ProductAdd extends Component{
               <label>Description</label>
               
               <textarea value={this.state.fields.description} className="form-control" name="description" id="description" onChange={this.handleChange}></textarea>
-              {this.validator.message('description',this.state.fields.description,"required")}
+             
               
               </FormGroup>
               <FormGroup>
@@ -161,7 +161,7 @@ export default class ProductAdd extends Component{
               {this.validator.message('Unit',this.state.fields.unit,"required")}
               </FormGroup>
               <FormGroup>
-              <label>Unit Price</label>
+              <label>Unit Price<small>(Enter each {this.state.fields.unit?this.state.fields.unit:'unit'} price)</small></label>
               <input defaultValue={this.state.fields.price} type="text" className="form-control" palceholder="Price" name="price" id="price" onChange={this.handleChange}/>
               {this.validator.message('price',this.state.fields.price,"required|numeric")}
               </FormGroup>
@@ -174,7 +174,10 @@ export default class ProductAdd extends Component{
                             
               <FormGroup>
               <label>Minimum Order</label>
+              <div class="input-group">
               <input defaultValue={this.state.fields.minimum_order} type="text" className="form-control"  name="minimum_order" id="minimum_order" onChange={this.handleChange}/>
+              <div className="col-md-3">{this.state.fields.unit}</div>
+              </div>
               {this.validator.message('Minimum order',this.state.fields.minimum_order,"required|numeric")}
               </FormGroup>
               

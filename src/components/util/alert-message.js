@@ -11,7 +11,7 @@ export default class AlertMessage extends Component{
     componentWillMount(){
         let prop=this.props.prop;
       
-        if(typeof prop.history.location.state!='undefined' && prop.history.location.state.msg!=""){
+        if(typeof prop.history!='undefined' && typeof prop.history.location.state!='undefined' && prop.history.location.state.msg!=""){
             let response=prop.history.location.state
             this.setState({
                         response:{msg:response.msg,status:response.status},

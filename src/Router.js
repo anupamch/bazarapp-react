@@ -4,6 +4,7 @@ import {Redirect } from 'react-router-dom';
 import Login from './components/login'
 import Layout from './main_layouts/layout'
 import DefaultLayout from './main_layouts/defaultLayout'
+
 import auth from './middleware/auth'
 import normal from './middleware/normal'
 import ProductRouter from './components/product/productRouter'
@@ -12,6 +13,9 @@ import User from './components/user'
 import Category from './components/category/category'
 import CategoryAdd from './components/category/categoryAdd'
 import CategoryEdit from './components/category/categoryEdit'
+import Settings from './components/AdminSetting/setting'
+import Logout from './components/logout/logout'
+
 //import {unregister} from './Interceptor'
 
 export default [
@@ -72,8 +76,21 @@ export default [
   layout:Layout,
   component:CategoryEdit,
   middleware:auth
+},
+{
+  path:'/settings',
+  exact:false,
+  layout:Layout,
+  component:Settings,
+  middleware:auth
+},
+{
+  path:'/logout',
+  exact:false,
+  layout:DefaultLayout,
+  component:Logout,
+  middleware:auth
 }
  
 
 ];
-

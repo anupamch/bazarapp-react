@@ -2,15 +2,16 @@ import React,{Component} from 'react';
 import axios from 'axios'
 import { Container, Row, Col, Card, CardHeader, CardBody } from "shards-react";
 import PageTitle from "../components/common/PageTitle";
+import config from '../config'
 export default class User extends Component{
     constructor(props){
         super(props);
         this.state={ulist:[]}
     }
     componentWillMount(){
-        axios.get('http://localhost:8080/users')
+        axios.get(config.API_URL+'/users')
             .then(res=>{
-                console.log(res.data)
+                
                 this.setState({ulist:res.data.users})
             })
             .catch(error=>{
