@@ -47,3 +47,36 @@
 .pointer-cursor{
   cursor: pointer;
 }
+
+.shaded-row{
+  padding: 0px;
+  
+  border: 1px solid rgb(22, 148, 170);
+}
+
+.shaded-row .row{
+  padding: 3px 0px;
+}
+.shaded-row .row:nth-child(2n+1){
+  background-color: #FFF;
+  
+}
+
+.shaded-row .row div:first-child{
+   font-weight: 600;
+}
+.order-details-container h5{
+  background-color: rgb(22, 148, 170);
+  padding: 5px 10px;
+  color: #FFF;
+  margin: 0px;
+}
+
+.paid{
+  color: green;
+  font-weight: 600;
+}
+.not_paid{
+  color: red;
+  font-weight:600 ;
+}

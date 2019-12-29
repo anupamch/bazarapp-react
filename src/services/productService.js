@@ -42,7 +42,7 @@ class ProductService{
     }
 
     static editProduct(form){
-        console.log(JSON.stringify(form.fields))
+        //console.log(JSON.stringify(form.fields))
         var fdata=new FormData();
        
        fdata.set('fields',JSON.stringify(form.fields))  

@@ -25,6 +25,12 @@ export default function() {
       htmlAfter: ""
     },
     {
+      title: "Orders",
+      to: "/orders",
+      htmlBefore: '<i class="fas fa-tachometer-alt"></i>',
+      htmlAfter: ""
+    },
+    {
       title: "Settings",
       to: "/settings",
       htmlBefore: '<i class="fas fa-cog"></i>',

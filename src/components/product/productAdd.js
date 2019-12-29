@@ -13,7 +13,8 @@ export default class ProductAdd extends Component{
            errors:{},
            categories:[],
            images: [],
-           is_service:0
+           is_service:0,
+           min_order : ''
         }
         this.validator=new SimpleReactValidator();
      }
@@ -35,6 +36,24 @@ export default class ProductAdd extends Component{
         let id=event.target.id
         let fields=this.state.fields;
         //console.log(event.target.value)
+        if(id==='minimum_order'){
+            if(parseFloat(event.target.value)<1){
+                let t =  event.target.value*1000;
+                let u=''
+                if(fields['unit']=='kg')
+                    u='gram'
+                else if(fields['unit']=='g')    
+                    u='mg'
+                else if(fields['unit']=='lit')    
+                    u='ml'
+                fields['dis_min_order'] = t+u
+                this.setState({min_order:t+u})
+            }
+            else{
+                fields['dis_min_order'] = event.target.value
+                this.setState({min_order:''})
+            }
+        }
         fields[event.target.id]=event.target.value;
         this.setState({
          fields
@@ -144,7 +163,7 @@ export default class ProductAdd extends Component{
               <select className="form-control"  name="unit" id="unit" onChange={this.handleChange}>
                   <option value="">--Select unit--</option>
                   <option value="kg">Kilo gram</option>
-                  <option value="gm">Gram</option>
+                  <option value="g">Gram</option>
                   <option value="lit">Litter</option>
                   <option value="lb">Pound</option>
                   <option value="pisces">Pisces</option>
@@ -168,7 +187,7 @@ export default class ProductAdd extends Component{
               <div class="input-group">
               <input type="text" className="form-control"  name="minimum_order" id="minimum_order" onChange={this.handleChange}/>
               <div className="col-md-3">{this.state.fields.unit}</div>
-              
+              <div className="col-md-12">{this.state.min_order}</div>
               </div>
               {this.validator.message('Minimum order',this.state.fields.minimum_order,"required|numeric")}
               </FormGroup>

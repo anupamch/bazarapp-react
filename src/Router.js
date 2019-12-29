@@ -9,6 +9,7 @@ import auth from './middleware/auth'
 import normal from './middleware/normal'
 import ProductRouter from './components/product/productRouter'
 
+import OrderRouter from './components/order/orderRouter'
 import User from './components/user'
 import Category from './components/category/category'
 import CategoryAdd from './components/category/categoryAdd'
@@ -75,6 +76,13 @@ export default [
   exact:false,
   layout:Layout,
   component:CategoryEdit,
+  middleware:auth
+},
+{
+  path:'/orders',
+  exact:false,
+  layout:Layout,
+  component:OrderRouter,
   middleware:auth
 },
 {

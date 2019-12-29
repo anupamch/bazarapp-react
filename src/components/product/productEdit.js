@@ -15,21 +15,26 @@ export default class ProductAdd extends Component{
            catagories:[],
            product:{},
            images: [],
-           is_service:0
+           is_service:0,
+           min_order : ''
         }
         this.validator=new SimpleReactValidator();
      }
 
      async componentWillMount(){
         let response=await CategoryService.getProductCategory();
-        if(response.data.status==200)
+        if(response.data.status==200){
             this.setState({catagories:response.data.categories})
+
+        }
         const id = this.props.match.params.id 
         
         ProductService.singleProduct(id).then(res=>{
                  //console.log(res.data.product)
-                  if(res.data.status==200)
+                  if(res.data.status==200){
                     this.setState({fields:res.data.product})
+                    this.setState({min_order:this.state.fields.dis_min_order})
+                  }
                   else
                     console.log("Something is wrong")  
                   
@@ -42,14 +47,55 @@ export default class ProductAdd extends Component{
      handleChange = (event)=>{
         let id=event.target.id
         let fields=this.state.fields;
+        if(id==='minimum_order'){
+            /* let u=fields['unit']
+            if(parseFloat(event.target.value)<1){
+                let t =  event.target.value*1000;
+                
+                if(fields['unit']=='kg')
+                    u='gram'
+                else if(fields['unit']=='gm')    
+                    u='mg'
+                else if(fields['unit']=='lit')    
+                    u='ml'
+                fields.dis_min_order = t+u
+                this.setState({min_order:t+u})
+            }
+            else{
+                fields.dis_min_order = event.target.value+u
+                this.setState({min_order:''})
+            } */
+            fields.dis_min_order = this.convertUnit(event.target.value,fields['unit'])
+        }
+        //console.log(fields)
         fields[event.target.id]=event.target.value;
         this.setState({
          fields
         })
         
     }
-
-     handleSubmit=async (event)=>{
+    convertUnit=(val,unit)=>{
+        let u=unit
+        let cunit=val+u
+        if(parseFloat(val)<1){
+            let t =  val*1000;
+            
+            if(unit=='kg')
+                u='gram'
+            else if(unit=='g')    
+                u='mg'
+            else if(unit=='lit')    
+                u='ml'
+                cunit = t+u
+            this.setState({min_order:t+u})
+        }
+        else{
+            cunit = val+u
+            this.setState({min_order:''})
+        }
+        return cunit
+    }
+    handleSubmit=async (event)=>{
         event.preventDefault();
         if(this.validator.allValid()){
             /* if(this.state.images.length==0){
@@ -58,6 +104,12 @@ export default class ProductAdd extends Component{
             }
             else
               this.setState({error:{imageError:""}}) */
+            
+            if(this.state.fields.dis_min_order==null ){
+                let fields = this.state.fields
+                fields.dis_min_order = this.convertUnit(this.state.fields.minimum_order,this.state.fields.unit)
+                this.setState({fields})
+            }  
             let response = await ProductService.countSku(this.state.fields.sku,this.state.fields.id);  
              if(this.state.fields.is_service){
                 
@@ -153,7 +205,7 @@ export default class ProductAdd extends Component{
               <select  value={this.state.fields.unit} className="form-control"  name="unit" id="unit" onChange={this.handleChange}>
                   <option value="">--Select unit--</option>
                   <option value="kg" >Kilo gram</option>
-                  <option value="gm">Gram</option>
+                  <option value="g">Gram</option>
                   <option value="lit">Litter</option>
                   <option value="lb">Pound</option>
                   <option value="pisces">Pisces</option>
@@ -174,9 +226,10 @@ export default class ProductAdd extends Component{
                             
               <FormGroup>
               <label>Minimum Order</label>
-              <div class="input-group">
+              <div className="input-group">
               <input defaultValue={this.state.fields.minimum_order} type="text" className="form-control"  name="minimum_order" id="minimum_order" onChange={this.handleChange}/>
               <div className="col-md-3">{this.state.fields.unit}</div>
+              <div className="col-md-12">{this.state.min_order}</div>
               </div>
               {this.validator.message('Minimum order',this.state.fields.minimum_order,"required|numeric")}
               </FormGroup>

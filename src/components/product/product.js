@@ -12,14 +12,14 @@ export default class Product extends Component{
     constructor(props){
         super(props);
         this.state={plist:[],products:[]}
-        console.log(ProductService)
+        //console.log(ProductService)
     }
     componentWillMount(){
       this.getAllProduct()
     }
     getAllProduct=()=>{
           ProductService.getProducts().then(res=>{
-            console.log(res.data)
+            //console.log(res.data)
             this.setState({plist:res.data.products})
             this.setState({products:res.data.products})
         })
@@ -96,7 +96,7 @@ export default class Product extends Component{
                         },
                         {
                           name:'Minimum Order',
-                          cell:row=> row.minimum_order+" "+row.unit,
+                          cell:row=> row.dis_min_order,
                           sortable: true,
                         },
                          {
