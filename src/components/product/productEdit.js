@@ -30,7 +30,6 @@ export default class ProductAdd extends Component{
         const id = this.props.match.params.id 
         
         ProductService.singleProduct(id).then(res=>{
-                 //console.log(res.data.product)
                   if(res.data.status==200){
                     this.setState({fields:res.data.product})
                     this.setState({min_order:this.state.fields.dis_min_order})
@@ -133,7 +132,8 @@ export default class ProductAdd extends Component{
             
             ProductService.editProduct(this.state).then(res=>{
                 if(res.status==200){
-                    this.props.history.push('/product',{status:'success',msg:"Product edited successfuly"})
+                    this.props.history.push('/product/edit/'+this.state.fields.id,
+                    {status:'success',msg:"Product edited successfuly"})
                 }
 
             }).catch(error=>{
@@ -270,6 +270,15 @@ export default class ProductAdd extends Component{
                   {this.state.catagories.map((category,index)=>{
                       return <option key={index} value={category.id}>{category.name}</option>
                   })}
+              </select>
+              {this.validator.message('Category',this.state.fields.category_id,"required")}
+              </FormGroup>
+              <FormGroup>
+              <label>Stock Status</label>
+              <select value={this.state.fields.status} className="form-control"  name="status" id="status" onChange={this.handleChange}>
+                  <option>--Select Product Status--</option>
+                  <option value='1'>In Stock</option>
+                  <option value='0'>Out of Stock</option>
               </select>
               {this.validator.message('Category',this.state.fields.category_id,"required")}
               </FormGroup>

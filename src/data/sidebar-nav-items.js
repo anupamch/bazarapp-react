@@ -31,6 +31,12 @@ export default function() {
       htmlAfter: ""
     },
     {
+      title: "Bazar Slip List",
+      to: "/orders/bazar-slip-list",
+      htmlBefore: '<i class="fas fa-tachometer-alt"></i>',
+      htmlAfter: ""
+    },
+    {
       title: "Settings",
       to: "/settings",
       htmlBefore: '<i class="fas fa-cog"></i>',

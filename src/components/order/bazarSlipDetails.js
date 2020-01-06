@@ -6,19 +6,48 @@ import PageTitle from "../common/PageTitle";
 
 import AlertMessage from "../util/alert-message";
 import OrderService from "../../services/orderService";
-import DataTable from "react-data-table-component";
-export default class OrderDetails extends Component {
+import config from '../../config'
+export default class BazarSlipDetails extends Component {
   constructor(props) {
     super(props);
-    this.state = { order: null };
+    this.state = { order: null,inputValue:'' };
   }
 
   componentDidMount() {
     const id = this.props.match.params.id;
-    OrderService.singleOrder(id).then(res => {
+    OrderService.singleBazarSlip(id).then(res => {
       this.setState({ order: res.data.order });
-      //console.log(this.state.order);
+      let {
+           total_cost,
+           payable_cost,
+           discount_cost,
+           delivery_charge,
+           payment_status,
+           delivery_status,
+           item_count
+        } = res.data.order
+      let inputVal ={total_cost,
+                        payable_cost,
+                        discount_cost,
+                        delivery_charge,
+                        payment_status,
+                        delivery_status,
+                        item_count,
+                        id:id
+                    }
+       this.setState({inputValue:inputVal})    
+       console.log(this.state.inputValue)         
     });
+  }
+
+  updateInputValue=(event)=> {
+   
+    let inputValue=this.state.inputValue;
+    inputValue[event.target.id]=event.target.value;
+        this.setState({
+            inputValue
+        })  
+    
   }
 
    handleDeliveryChange= (event, id, order_id,product_price,total_price )=> {
@@ -38,81 +67,20 @@ export default class OrderDetails extends Component {
     }
   };
 
-  handlePaymentChange = event => {
-    const id = this.props.match.params.id;
-    const pstatus = event.target.value;
-    if (window.confirm("Are you sure to change the status?")) {
-      OrderService.changePaymentStatus(id, pstatus).then(res => {
-        if (res.status === 200) {
-          window.location.href = "/orders/details/" + id;
-        }
-      });
-    }
+  handleSlipDetailsChange = () => {
+      
+      OrderService.updateBazarSlip(this.state.inputValue)
+                  .then(res=>{
+                    if (res.status === 200) {
+                        window.location.href = "/orders/slip-details/" + this.state.inputValue.id;
+                      }
+                  })
   };
 
   render() {
     let hdata = "";
     if (this.state.order !== null) {
-      const columns = [
-        {
-          name: "#SKU",
-          cell: row => row.Product.sku,
-          sortable: true
-        },
-        {
-          name: "Name",
-          cell: row => row.Product.name,
-          sortable: true
-        },
-        {
-          name: "Category",
-          cell: row => row.Product.ProductCategory.name,
-          sortable: true
-        },
-        {
-          name: "Unit Price(Rs.)",
-          cell: row => parseFloat(row.unit_price).toFixed(2),
-          sortable: true
-        },
-        
-        {
-          name: "Quantity",
-          cell: row => row.item_count + row.product_unit,
-          sortable: true
-        },
-        {
-         name: "Ex.Service",
-         cell: row => row.Product.service_name
-       },
-        {
-          name: "Service Cost",
-          cell: row => parseFloat(row.service_cost).toFixed(2)
-        },
-
-        {
-          name: "Total Price",
-          cell: row => parseFloat(row.total_price).toFixed(2),
-          sortable: true
-        },
-        {
-          name: "Delivery Status",
-          cell: row => {
-            
-            return (
-              <select
-                value={row.delivery_status}
-                onChange={e => this.handleDeliveryChange(e, row.id, row.order_id,
-                  row.total_price,this.state.order.payable_cost)}
-                autoComplete="off"
-              >
-                <option value="false">Pending</option>
-                <option value="true">Delivered</option>
-              </select>
-            );
-          },
-          sortable: true
-        }
-      ];
+      
       let monthNames = [
         "January",
         "February",
@@ -189,43 +157,75 @@ export default class OrderDetails extends Component {
                 </div>
               </div>
               <div className="row">
-                <div className="col-md-5">Total Cost:</div>
+                <div className="col-md-5">Total Cost(Rs.):</div>
                 <div className="col-md-6">
-                  Rs.{parseFloat(this.state.order.total_cost).toFixed(2)}
+                <input type="number" 
+                         defaultValue={this.state.inputValue.total_cost} 
+                         id="total_cost" 
+                         onChange={this.updateInputValue}/>
+                  
                 </div>
               </div>
               <div className="row">
-                <div className="col-md-5">Delivery Charge:</div>
+                <div className="col-md-5">Delivery Charge(Rs.):</div>
                 <div className="col-md-6">
-                  Rs.{parseFloat(this.state.order.delivery_charge).toFixed(2)}
+                <input type="number" 
+                         defaultValue={this.state.inputValue.delivery_charge} 
+                         id="delivery_cost" 
+                         onChange={this.updateInputValue}/> 
+                 
                 </div>
               </div>
               <div className="row">
-                <div className="col-md-5">Discount:</div>
+                <div className="col-md-5">Discount(Rs.):</div>
                 <div className="col-md-6">
-                  Rs.{parseFloat(this.state.order.discount_cost).toFixed(2)}
+                <input type="number" 
+                         defaultValue={this.state.inputValue.discount_cost} 
+                         id="discount" 
+                         onChange={this.updateInputValue}/> 
+                 
                 </div>
               </div>
               <div className="row">
-                <div className="col-md-5">Payable Price:</div>
+                <div className="col-md-5">Payable Price(Rs.):</div>
                 <div className="col-md-6">
-                  Rs.{parseFloat(this.state.order.payable_cost).toFixed(2)}
+                <input type="number" 
+                         defaultValue={this.state.inputValue.payable_cost} 
+                         id="payable_cost" 
+                         onChange={this.updateInputValue}/> 
+                 
                 </div>
               </div>
               <div className="row">
                 <div className="col-md-5">
-                  Payment Status:{this.state.order.payment_status}
+                  Payment Status:
                 </div>
                 <div className="col-md-6">
                   
                   <select
-                    name="payment_status"
-                    value={this.state.order.payment_status}
-                    onChange={this.handlePaymentChange}
-                    autoComplete="off"
-                  >
+                    id="payment_status"
+                    value={this.state.inputValue.payment_status}
+                    onChange={this.updateInputValue}
+                    autoComplete="off">
                     <option value="false">Not Paid</option>
                     <option value="true">Paid</option>
+                  </select>
+                </div>
+              </div>
+              <div className="row">
+                <div className="col-md-5">
+                  Delivery Status:
+                </div>
+                <div className="col-md-6">
+                 
+                  <select
+                    id="delivery_status"
+                    value={this.state.inputValue.delivery_status}
+                    onChange={this.updateInputValue}
+                    autoComplete="off"
+                  >
+                    <option value="false">Pending</option>
+                    <option value="true">Delivered</option>
                   </select>
                 </div>
               </div>
@@ -235,31 +235,50 @@ export default class OrderDetails extends Component {
               </div>
               <div className="row">
                 <div className="col-md-5">Total Item:</div>
-                <div className="col-md-6">{this.state.order.item_number}</div>
+                <div className="col-md-6">
+                   
+                    <input type="text" 
+                         defaultValue={this.state.inputValue.item_count} 
+                         id="item_count" onChange={this.updateInputValue}/> 
+                </div>
+              </div>
+              <div className="row">
+                  <div className="col-md-12" >
+                    <button className="btn btn-success" 
+                            onClick={this.handleSlipDetailsChange}>
+                        Save
+                    </button>
+                  </div>
               </div>
             </div>
           </div>
           <div className="col-md-12 col-sm-12">&nbsp;</div>
+         
           <div className="col-md-12 col-sm-12">
-            <h5>Item Details</h5>
-            <DataTable
-              pagination={false}
-              columns={columns}
-              data={this.state.order.OrderDetails}
-            />
+            <h5>Slip in Text</h5>
+            <div className="col-md-12 col-sm-12 shaded-row">
+                {this.state.order.slip_text.split(',').map(function(item, key) {
+                    return (
+                    <span key={key}>
+                        {item}
+                        <br/>
+                    </span>
+                    )
+              })}
+            </div>
           </div>
-         
-         
-            <div className="col-md-12 col-sm-12">
-            
-              Total: Rs.{parseFloat(this.state.order.payable_cost).toFixed(2)}<br/>
-              Status: {this.state.order.payment_status?<span className="paid">Paid</span>:
-              <span className="not_paid">Not Paid</span>}
-            </div>  
+          <div className="col-md-12 col-sm-12">&nbsp;</div>
+          <div className="col-md-12 col-sm-12">
+            <h5>Slip in Image</h5>
+            <div className="col-md-12 col-sm-12 shaded-row">
+                <img src={config.API_URL+'/uploads/bazar_slip/'+this.state.order.slip_image} />
+            </div>
+          </div>               
+             
            
          
           <div className="col-md-12 col-sm-12" style={{textAlign:"center"}}>
-          <a href="/orders" className="btn btn-danger">
+          <a href="/orders/bazar-slip-list" className="btn btn-danger">
             Back
           </a>
           </div>
@@ -277,8 +296,8 @@ export default class OrderDetails extends Component {
           <Row noGutters className="page-header py-4">
             <PageTitle
               sm="4"
-              title="Order Details"
-              subtitle="Order"
+              title="Slip Details"
+              subtitle="Slip"
               className="text-sm-left"
             />
           </Row>

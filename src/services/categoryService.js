@@ -29,21 +29,29 @@ constructor(){}
              }) 
     } 
     static createCategory(form){
+        var fdata=new FormData();
+         
+         fdata.set('fields',JSON.stringify(form.fields))
         
+         fdata.append('cimage',form.images[0],form.images[0].name)
         return axios({
             method: 'post',
             url: config.API_URL+'/create-category',
-            data: form,
+            data: fdata,
             config: { headers: {'Content-Type': 'multipart/form-data' }}
             })
     }
 
     static editCategory(form){
+        var fdata=new FormData();
+         
+         fdata.set('fields',JSON.stringify(form.fields))
         
+         fdata.append('cimage',form.images[0],form.images[0].name)
         return axios({
             method: 'post',
             url: config.API_URL+'/edit-category',
-            data: form,
+            data: fdata,
             config: { headers: {'Content-Type': 'multipart/form-data' }}
             })
     }

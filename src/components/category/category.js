@@ -5,7 +5,6 @@ import { Link } from 'react-router-dom';
 import PageTitle from "../common/PageTitle";
 import config from '../../config'
 import AlertMessage from '../util/alert-message'
-
 import DataTable from 'react-data-table-component';
 
 export default class Category extends Component{
@@ -71,6 +70,14 @@ export default class Category extends Component{
                           name: 'Name',
                           selector: 'name',
                           sortable: true,
+                         },
+                         {
+                          name: 'Image',
+                          cell:row=><img 
+                                   src={config.API_URL+'/uploads/category_image/'+row.id+'.jpg'} 
+                                   width="50px" 
+                                   height="50px"/>,
+                         
                          },
                          
                          {

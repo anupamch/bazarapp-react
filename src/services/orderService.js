@@ -36,6 +36,25 @@ constructor(){}
             })
     }
 
+    static getBazarSlip(){
+        return axios.get(config.API_URL+'/get-bazar-slip')
+    }
+
+    static singleBazarSlip(id){
+        
+        return axios.get(config.API_URL+'/get-bazar-slip-details/'+id)
+    }
+
+    static updateBazarSlip(input){
+        
+        return axios({
+            method: 'post',
+            url: config.API_URL+'/update-bazar-slip',
+            data:input
+            
+            })
+    }
+
     
 }
 

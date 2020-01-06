@@ -6,26 +6,23 @@ import PageTitle from "../common/PageTitle";
 import AlertMessage from '../util/alert-message'
 import OrderService from '../../services/orderService'
 import DataTable from 'react-data-table-component';
-export default class Orders extends Component{
-     constructor(props){
-        super(props)
-        this.state={olist:[],orders:[]}
-     }
-
-     componentWillMount(){
-        this.getOrders()
-      }
-
-      getOrders=()=>{
-          OrderService.getOrders().then(res=>{
-              
-              this.setState({olist:res.data.orders,orders:res.data.orders})
-          }).catch(error=>{
-            
-          })
-      }
-
-      searchOrder=(e)=>{
+export default class BazarSlipList extends Component{
+    constructor(props){
+       super(props)
+       this.state={olist:[],orders:[]}
+    }
+    componentWillMount(){
+        this.getBazarSlip()
+    }
+    getBazarSlip=()=>{
+        OrderService.getBazarSlip().then(res=>{
+            console.log(res.data.orders)
+            this.setState({olist:res.data.orders,orders:res.data.orders})
+        }).catch(error=>{
+          
+        })
+    }
+    searchOrder=(e)=>{
         let tval=e.target.value;
         if(tval==""){
           this.setState({olist:this.state.orders})
@@ -34,7 +31,7 @@ export default class Orders extends Component{
         let olist=[]
         for(let val of this.state.orders){
               
-              if((val['order_id']).toUpperCase().indexOf(tval.toUpperCase())===0 || 
+              if((val['id']).toUpperCase().indexOf(tval.toUpperCase())===0 || 
                   val['user']['phone'].toUpperCase().indexOf(tval.toUpperCase())===0){
                   olist.push(val)
               }
@@ -45,12 +42,11 @@ export default class Orders extends Component{
         
     }
 
-      render(){
-         
-        const columns = [
+    render(){
+       const columns = [
                             {
-                                name: '#Order Id',
-                                selector: 'order_id',
+                                name: '#Slip Id',
+                                selector: 'id',
                                 sortable: true,
                             },
                             {
@@ -64,16 +60,10 @@ export default class Orders extends Component{
                                 cell:row=>row.payment_status?'Paid':'Pending',
                                 sortable: true,
                             },
-                            
                             {
-                                name: 'item number',
-                                selector: 'item_number',
-                                sortable: true,
-                            },
-                            {
-                                name: 'Total(Rs.)',
-                                selector: 'total_cost',
-                                cell:row=>(parseFloat(row.total_cost)).toFixed(2),
+                                name: 'Devivery Status',
+                                selector: 'devivery_status',
+                                cell:row=>row.delivery_status?'Delivered':'Pending',
                                 sortable: true,
                             },
                             {
@@ -94,8 +84,26 @@ export default class Orders extends Component{
                                 sortable: true,
                             },
                             {
+                                name: 'Order Date',
+                                selector: 'created_at',
+                                cell:row=>{let ddate=new Date(row.createdAt)
+                                    console.log(row.created_at)
+                                            let monthNames = [
+                                                "January", "February", "March",
+                                                "April", "May", "June", "July",
+                                                "August", "September", "October",
+                                                "November", "December"
+                                            ];
+                                            let day = ddate.getDate();
+                                            let monthIndex = ddate.getMonth();
+                                            let year = ddate.getFullYear();
+                                            return day + ' ' + monthNames[monthIndex] + ' ' + year;
+                                          },
+                                sortable: true,
+                            },
+                            {
                              name:'Action',
-                             cell:row=><div><Link  to={`/orders/details/${row.id}`} className='btn btn-info'>Details</Link></div>
+                             cell:row=><div><Link  to={`/orders/slip-details/${row.id}`} className='btn btn-info'>Details</Link></div>
                                  
                            }
 
@@ -103,7 +111,7 @@ export default class Orders extends Component{
          return (<Container fluid className="main-content-container px-4">
              <AlertMessage prop={this.props}></AlertMessage>
             <Row noGutters className="page-header py-4">
-               <PageTitle sm="4" title="Order List" subtitle="Orders" className="text-sm-left" />
+               <PageTitle sm="4" title="Slip List" subtitle="Bazar Slip List" className="text-sm-left" />
             </Row>
 
             <Row>
@@ -131,4 +139,5 @@ export default class Orders extends Component{
             </Row>
          </Container>) 
       }
+
 }

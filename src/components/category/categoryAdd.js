@@ -10,7 +10,7 @@ export default class CategoryAdd extends Component{
         this.state={
            fields:{},
            errors:{},
-           
+           images:[]
         }
         this.validator=new SimpleReactValidator();
      }
@@ -34,15 +34,19 @@ export default class CategoryAdd extends Component{
         if(this.validator.allValid()){
            
             let response = await CategoryService.countCategory(this.state.fields.name);  
-           //console.log(response)
+           
             if(response.data.count>0){
                 this.setState({errors:{nameError:"Category '"+this.state.fields.name+"' already exist"}})
                 return;
             }
+            else if(this.state.images.length==0){
+                this.setState({errors:{imageError:"Category Image required"}})
+                return;
+             }
             else{
                 this.setState({errors:{}})
             }
-            CategoryService.createCategory(this.state.fields).then(res=>{
+            CategoryService.createCategory(this.state).then(res=>{
                 if(res.status==200){
                     this.props.history.push('/category',{status:'success',msg:"Category created successfuly"})
                 }
@@ -60,7 +64,14 @@ export default class CategoryAdd extends Component{
             this.forceUpdate(); 
         }
     }
-    
+    selectImage=(event)=>{
+        let images=[];
+        for(let i=0;i<event.target.files.length;i++){
+             images[i]=event.target.files.item(i)
+        }
+       
+        this.setState({ images:images })
+    }
 
     render(){
         return(<Container fluid className="main-content-container px-4">
@@ -80,6 +91,13 @@ export default class CategoryAdd extends Component{
             
             
              
+              <div className="col-md-12">&nbsp;</div>
+              <FormGroup>
+              <label>Category Image</label>
+              <input type="file"  name="cimage" id="cimage" onChange={this.selectImage} className="form-control"/>
+              <span style={{color:'red'}}>{this.state.errors.imageError}</span>
+              
+              </FormGroup>
               <div className="col-md-12">&nbsp;</div>
               <div className="col-md-12 nopadding">
              
